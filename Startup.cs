@@ -6,10 +6,12 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using TestJulius2Grow.Api.Data.Context;
 
 namespace TestJulius2Grow.Api
 {
@@ -26,6 +28,19 @@ namespace TestJulius2Grow.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddDbContext<BookDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DevConnection")));
+
+            //Swagger
+            services.AddSwaggerGen(s =>
+            {
+                s.SwaggerDoc("v2", new Microsoft.OpenApi.Models.OpenApiInfo
+                {
+                    Title = "Test Julius2Grow",
+                    Description = "PRUEBA TÉCNICA PARA EL CARGO ANALISTA DE DESARROLLO",
+                    Version = "v2"
+
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -35,6 +50,12 @@ namespace TestJulius2Grow.Api
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(s =>
+            {
+                s.SwaggerEndpoint("/swagger/v2/swagger.json", "Test Julius2Grow");
+            });
 
             app.UseHttpsRedirection();
 
