@@ -12,13 +12,15 @@ namespace TestJulius2Grow.Api.Controllers
     {
         private readonly BookDbContext _context;
 
+        #region [ Context DataBase ]
         public BooksController(BookDbContext context)
         {
             _context = context;
         }
+        #endregion
 
 
-        #region [ Read All Books/Filter 10]
+        #region [ Read All Books]
         /// <summary>
         /// Get all books of 10 in 10
         /// </summary>
@@ -40,7 +42,8 @@ namespace TestJulius2Grow.Api.Controllers
         /// <param name="book"></param>
         /// <returns>new book</returns>
         /// 
-        [HttpPost("{AddBook}")]
+        [Route("{AddBook}")]
+        [HttpPost]
         public ActionResult<Book> AddBook([FromBody] Book book)
         {
             _context.Books.Add(book);
@@ -51,7 +54,13 @@ namespace TestJulius2Grow.Api.Controllers
 
 
         #region [ Update Book ]
-        [HttpPut("UpdateBook/{id}")]
+        /// <summary>
+        /// Update Book
+        /// </summary>
+        /// <param name="book"></param>
+        /// <returns>book updated</returns>
+        [Route("UpdateBook/{id}")]
+        [HttpPut]
         public ActionResult UpdateBook(Book book)
         {
             var bookUpdate = _context.Books.FirstOrDefault(b => b.BookId == book.BookId);
@@ -66,7 +75,13 @@ namespace TestJulius2Grow.Api.Controllers
 
 
         #region [ Delete Book ]
-        [HttpDelete("Delete/{id}")]
+        /// <summary>
+        /// Delete book by Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>book deleted</returns>
+        [Route("Delete/{id}")]
+        [HttpDelete]
         public ActionResult<Book> DeleteBook(int id)
         {
             var bookDelete = _context.Books.FirstOrDefault(b => b.BookId == id);
@@ -78,6 +93,11 @@ namespace TestJulius2Grow.Api.Controllers
 
 
         #region [ Single Book by Id ]
+        /// <summary>
+        /// Get Book by Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>book by Id</returns>
         [Route("SingleBook/{id}")]
         [HttpGet]
         public ActionResult<Book> GetBookById(int id)
